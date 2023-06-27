@@ -1,0 +1,2012 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="css/strict.css">
+        <link rel="stylesheet" type="text/css" href="css/network.css">
+        <script data-main="js/app" src="lib/require/require.js"></script>
+
+        <style>
+            body {
+                background-color: #F5F5F5;
+                color: #333333;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
+
+            td, th {
+                padding: 1px 4px;
+            }
+
+            .scrollable-table {
+                max-height: 800px; /* Adjust the height as needed */
+                overflow-y: scroll;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="network-viewer container" id="main_page">
+            <!-- Page header for the webpage -->
+            <div class="row page-header">
+                <!-- Title of application -->
+                <h2 class="col-md-10">Visualizing California's Largest Wildfire in History</h2>
+                <div class="col-md-9">
+                <h4>August Complex (2020) </h4>
+                </div>
+                <div class="col-md-9">
+                    The August Complex Fire was the <a href="https://storymaps.arcgis.com/stories/1a0a88e7872e48919831793fd496b814#:~:text=The%20largest%20wildfire%20in%20California%20history&text=Of%20those%20ignitions%2C%2037%20would,acre%20footprint%20across%20seven%20counties.">largest wildfire</a> in Californian history, covering over 1 million acres, an area larger than the state of Rhode Island.  Approximately 77,000 people evacuated to surrounding counties, which we will visualize here.  For this visualization, we utilized <a href="https://github.com/GeoDS/COVID19USFlows#code-usage">US mobility data</a> along with the California <a href="https://data-nifc.opendata.arcgis.com/datasets/nifc::wfigs-interagency-fire-perimeters/explore?location=35.108013%2C-115.709586%2C5.92">wildfire</a> geolocation data. The 7 larger nodes marked in purple are the counties (Mendocino, Humbolt, Trinity, Tehama, Glenn, Lake, and Colusa) that were directly affected by the August complex fire, <a href="https://www.fire.ca.gov/incidents/2020/8/16/august-complex-includes-doe-fire/">according to CA fire</a>. In the graph, we show where people have migrated to from one county to another during the fire. 
+                    <br></br>
+                    <sup><a href="https://github.com/your/repository">
+                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" height="20" width="20">
+                    </a></sup>
+                </div>
+            </div>
+            <!-- Main Application window -->
+            <div class="row" id="app_container">
+                <!-- Left panel for trajectory analysis -->
+                <!-- <div class="col-md-3"> -->
+                    <div class="col-md-4 scrollable-table">
+                    <!-- Init table for trajectory analysis. -->
+                    <table class="table row">
+                        
+                        <thead>
+                            <caption>Migration outflows in affected counties from August 2020 to November 2020</caption>
+                            <tr>
+                                <th colspan="1">Origin</th>
+                                <th colspan="1">Destination</th>
+                                <th colspan="1"># Migrations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablebody"></tbody>
+                    </table>
+                </div>
+                <!-- Viewer panel -->
+                <div class="col-md-8" id="network_viewer"></div>
+            </div>
+            
+        </div>
+        <script>
+            // Sample data to populate the table
+            const data = [
+    {
+        "county_o":"Tehama County",
+        "county_d":"Shasta County",
+        "pop_flows":21787
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Butte County",
+        "pop_flows":11277
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Butte County",
+        "pop_flows":9657
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Sonoma County",
+        "pop_flows":6883
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Sonoma County",
+        "pop_flows":6795
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Mendocino County",
+        "pop_flows":6016
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Sutter County",
+        "pop_flows":3837
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Yolo County",
+        "pop_flows":3704
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Lake County",
+        "pop_flows":3504
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Glenn County",
+        "pop_flows":3023
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Tehama County",
+        "pop_flows":2650
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Shasta County",
+        "pop_flows":2522
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Napa County",
+        "pop_flows":2397
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Trinity County",
+        "pop_flows":1909
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Sacramento County",
+        "pop_flows":1905
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Shasta County",
+        "pop_flows":1741
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Sacramento County",
+        "pop_flows":1526
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Mendocino County",
+        "pop_flows":1514
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Humboldt County",
+        "pop_flows":1370
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Glenn County",
+        "pop_flows":1247
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Sacramento County",
+        "pop_flows":1219
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Humboldt County",
+        "pop_flows":1218
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Del Norte County",
+        "pop_flows":1214
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Sacramento County",
+        "pop_flows":1122
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Shasta County",
+        "pop_flows":1115
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Colusa County",
+        "pop_flows":1071
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Butte County",
+        "pop_flows":982
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Sacramento County",
+        "pop_flows":951
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Humboldt County",
+        "pop_flows":889
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Sacramento County",
+        "pop_flows":871
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Sonoma County",
+        "pop_flows":862
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Alameda County",
+        "pop_flows":849
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Solano County",
+        "pop_flows":832
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Los Angeles County",
+        "pop_flows":821
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Siskiyou County",
+        "pop_flows":655
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Solano County",
+        "pop_flows":628
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Alameda County",
+        "pop_flows":627
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Butte County",
+        "pop_flows":610
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Los Angeles County",
+        "pop_flows":585
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Shasta County",
+        "pop_flows":578
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Placer County",
+        "pop_flows":553
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Alameda County",
+        "pop_flows":540
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Sacramento County",
+        "pop_flows":509
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Riverside County",
+        "pop_flows":500
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Siskiyou County",
+        "pop_flows":484
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Yuba County",
+        "pop_flows":483
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Yolo County",
+        "pop_flows":464
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Sutter County",
+        "pop_flows":454
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Contra Costa County",
+        "pop_flows":454
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Contra Costa County",
+        "pop_flows":435
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Yolo County",
+        "pop_flows":434
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Colusa County",
+        "pop_flows":429
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Tehama County",
+        "pop_flows":426
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Placer County",
+        "pop_flows":425
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Sutter County",
+        "pop_flows":422
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Contra Costa County",
+        "pop_flows":418
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Marin County",
+        "pop_flows":415
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Diego County",
+        "pop_flows":413
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Yolo County",
+        "pop_flows":409
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Diego County",
+        "pop_flows":405
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Butte County",
+        "pop_flows":401
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Yolo County",
+        "pop_flows":398
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Colusa County",
+        "pop_flows":394
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Santa Clara County",
+        "pop_flows":392
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Fresno County",
+        "pop_flows":391
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Joaquin County",
+        "pop_flows":381
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Marin County",
+        "pop_flows":380
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Mateo County",
+        "pop_flows":379
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Placer County",
+        "pop_flows":375
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Santa Clara County",
+        "pop_flows":368
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Humboldt County",
+        "pop_flows":364
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Mendocino County",
+        "pop_flows":363
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Riverside County",
+        "pop_flows":362
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Orange County",
+        "pop_flows":362
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Placer County",
+        "pop_flows":357
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Solano County",
+        "pop_flows":354
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Siskiyou County",
+        "pop_flows":349
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Butte County",
+        "pop_flows":346
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Lassen County",
+        "pop_flows":345
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Shasta County",
+        "pop_flows":344
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Trinity County",
+        "pop_flows":334
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Joaquin County",
+        "pop_flows":333
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Santa Clara County",
+        "pop_flows":325
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Placer County",
+        "pop_flows":322
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Mateo County",
+        "pop_flows":321
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Santa Clara County",
+        "pop_flows":319
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Bernardino County",
+        "pop_flows":317
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Napa County",
+        "pop_flows":315
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Solano County",
+        "pop_flows":306
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Yolo County",
+        "pop_flows":302
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Sutter County",
+        "pop_flows":301
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Lake County",
+        "pop_flows":301
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Alameda County",
+        "pop_flows":286
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Colusa County",
+        "pop_flows":278
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Plumas County",
+        "pop_flows":273
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"El Dorado County",
+        "pop_flows":271
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Sutter County",
+        "pop_flows":268
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Placer County",
+        "pop_flows":266
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Mateo County",
+        "pop_flows":262
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Fresno County",
+        "pop_flows":256
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Del Norte County",
+        "pop_flows":254
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Tehama County",
+        "pop_flows":246
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Kern County",
+        "pop_flows":235
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Orange County",
+        "pop_flows":223
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Mendocino County",
+        "pop_flows":220
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":220
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Kern County",
+        "pop_flows":220
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Orange County",
+        "pop_flows":218
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Los Angeles County",
+        "pop_flows":217
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Lake County",
+        "pop_flows":208
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Mendocino County",
+        "pop_flows":208
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Solano County",
+        "pop_flows":206
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Los Angeles County",
+        "pop_flows":205
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Contra Costa County",
+        "pop_flows":205
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Yuba County",
+        "pop_flows":196
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Tehama County",
+        "pop_flows":193
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Modoc County",
+        "pop_flows":192
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Sonoma County",
+        "pop_flows":190
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Tehama County",
+        "pop_flows":190
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":190
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"El Dorado County",
+        "pop_flows":187
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Merced County",
+        "pop_flows":186
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Siskiyou County",
+        "pop_flows":186
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Joaquin County",
+        "pop_flows":185
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":182
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Sonoma County",
+        "pop_flows":182
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Joaquin County",
+        "pop_flows":180
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":179
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"El Dorado County",
+        "pop_flows":178
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Plumas County",
+        "pop_flows":177
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Napa County",
+        "pop_flows":171
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Yuba County",
+        "pop_flows":166
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"El Dorado County",
+        "pop_flows":161
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Butte County",
+        "pop_flows":160
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Stanislaus County",
+        "pop_flows":157
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Joaquin County",
+        "pop_flows":157
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Diego County",
+        "pop_flows":156
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Los Angeles County",
+        "pop_flows":153
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Diego County",
+        "pop_flows":153
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Shasta County",
+        "pop_flows":149
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Fresno County",
+        "pop_flows":149
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Marin County",
+        "pop_flows":147
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Bernardino County",
+        "pop_flows":147
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Stanislaus County",
+        "pop_flows":146
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":145
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Nevada County",
+        "pop_flows":143
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Yuba County",
+        "pop_flows":140
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Lake County",
+        "pop_flows":139
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Alameda County",
+        "pop_flows":137
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Fresno County",
+        "pop_flows":136
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Fresno County",
+        "pop_flows":136
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Sonoma County",
+        "pop_flows":134
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Joaquin County",
+        "pop_flows":128
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Kern County",
+        "pop_flows":126
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Mateo County",
+        "pop_flows":126
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Glenn County",
+        "pop_flows":124
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Modoc County",
+        "pop_flows":123
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Alameda County",
+        "pop_flows":121
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Lassen County",
+        "pop_flows":120
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":119
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Tehama County",
+        "pop_flows":117
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Yuba County",
+        "pop_flows":117
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Nevada County",
+        "pop_flows":116
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Solano County",
+        "pop_flows":114
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Tulare County",
+        "pop_flows":113
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Riverside County",
+        "pop_flows":109
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Orange County",
+        "pop_flows":109
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Napa County",
+        "pop_flows":109
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Plumas County",
+        "pop_flows":107
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Merced County",
+        "pop_flows":107
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Siskiyou County",
+        "pop_flows":107
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Stanislaus County",
+        "pop_flows":106
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Colusa County",
+        "pop_flows":106
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Bernardino County",
+        "pop_flows":103
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Trinity County",
+        "pop_flows":102
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Humboldt County",
+        "pop_flows":101
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Nevada County",
+        "pop_flows":101
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Bernardino County",
+        "pop_flows":99
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Stanislaus County",
+        "pop_flows":99
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Del Norte County",
+        "pop_flows":99
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Glenn County",
+        "pop_flows":98
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Contra Costa County",
+        "pop_flows":95
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Napa County",
+        "pop_flows":93
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"San Bernardino County",
+        "pop_flows":93
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Santa Clara County",
+        "pop_flows":92
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Los Angeles County",
+        "pop_flows":92
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Glenn County",
+        "pop_flows":91
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Tuolumne County",
+        "pop_flows":91
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Siskiyou County",
+        "pop_flows":90
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Contra Costa County",
+        "pop_flows":88
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Yuba County",
+        "pop_flows":88
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Nevada County",
+        "pop_flows":86
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Kern County",
+        "pop_flows":82
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Modoc County",
+        "pop_flows":81
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Kern County",
+        "pop_flows":81
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Monterey County",
+        "pop_flows":79
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":76
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Plumas County",
+        "pop_flows":72
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Santa Clara County",
+        "pop_flows":71
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Nevada County",
+        "pop_flows":71
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Del Norte County",
+        "pop_flows":70
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Merced County",
+        "pop_flows":69
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Plumas County",
+        "pop_flows":66
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Mateo County",
+        "pop_flows":65
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"San Joaquin County",
+        "pop_flows":64
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Sutter County",
+        "pop_flows":63
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"El Dorado County",
+        "pop_flows":62
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Merced County",
+        "pop_flows":62
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":62
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Solano County",
+        "pop_flows":60
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":60
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Monterey County",
+        "pop_flows":59
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Trinity County",
+        "pop_flows":59
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Siskiyou County",
+        "pop_flows":59
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Riverside County",
+        "pop_flows":59
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":58
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Lassen County",
+        "pop_flows":58
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Nevada County",
+        "pop_flows":57
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Los Angeles County",
+        "pop_flows":57
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Contra Costa County",
+        "pop_flows":57
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"El Dorado County",
+        "pop_flows":56
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Ventura County",
+        "pop_flows":56
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Orange County",
+        "pop_flows":56
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Colusa County",
+        "pop_flows":56
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Yolo County",
+        "pop_flows":55
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Marin County",
+        "pop_flows":55
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Tulare County",
+        "pop_flows":55
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":55
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Amador County",
+        "pop_flows":55
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"San Mateo County",
+        "pop_flows":54
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Tulare County",
+        "pop_flows":54
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Merced County",
+        "pop_flows":53
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Fresno County",
+        "pop_flows":53
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Monterey County",
+        "pop_flows":52
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Lake County",
+        "pop_flows":51
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Stanislaus County",
+        "pop_flows":50
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Monterey County",
+        "pop_flows":49
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":49
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Ventura County",
+        "pop_flows":47
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Kings County",
+        "pop_flows":47
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Madera County",
+        "pop_flows":46
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Ventura County",
+        "pop_flows":46
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Merced County",
+        "pop_flows":46
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Amador County",
+        "pop_flows":45
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Madera County",
+        "pop_flows":45
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Humboldt County",
+        "pop_flows":45
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Diego County",
+        "pop_flows":44
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Mendocino County",
+        "pop_flows":43
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Stanislaus County",
+        "pop_flows":43
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":41
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Mateo County",
+        "pop_flows":40
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Modoc County",
+        "pop_flows":40
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Riverside County",
+        "pop_flows":39
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Sonoma County",
+        "pop_flows":38
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Del Norte County",
+        "pop_flows":38
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Tuolumne County",
+        "pop_flows":37
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Orange County",
+        "pop_flows":37
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Trinity County",
+        "pop_flows":37
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"El Dorado County",
+        "pop_flows":37
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Plumas County",
+        "pop_flows":37
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Riverside County",
+        "pop_flows":36
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Tulare County",
+        "pop_flows":36
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Lassen County",
+        "pop_flows":36
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Kern County",
+        "pop_flows":36
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Calaveras County",
+        "pop_flows":36
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Madera County",
+        "pop_flows":35
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Placer County",
+        "pop_flows":33
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Del Norte County",
+        "pop_flows":32
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":31
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Glenn County",
+        "pop_flows":30
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Diego County",
+        "pop_flows":30
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Amador County",
+        "pop_flows":29
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Kern County",
+        "pop_flows":29
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Marin County",
+        "pop_flows":29
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"San Benito County",
+        "pop_flows":29
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Santa Clara County",
+        "pop_flows":28
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Tuolumne County",
+        "pop_flows":28
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Monterey County",
+        "pop_flows":27
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":27
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":27
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Marin County",
+        "pop_flows":27
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Tulare County",
+        "pop_flows":26
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Bernardino County",
+        "pop_flows":25
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Calaveras County",
+        "pop_flows":25
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Kings County",
+        "pop_flows":25
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"San Diego County",
+        "pop_flows":24
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Modoc County",
+        "pop_flows":24
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Fresno County",
+        "pop_flows":23
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Imperial County",
+        "pop_flows":23
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Stanislaus County",
+        "pop_flows":22
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Madera County",
+        "pop_flows":22
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Bernardino County",
+        "pop_flows":22
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Kings County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Napa County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Kings County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Merced County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"San Benito County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Tuolumne County",
+        "pop_flows":21
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Napa County",
+        "pop_flows":20
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Yuba County",
+        "pop_flows":19
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Mono County",
+        "pop_flows":19
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Kings County",
+        "pop_flows":19
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Madera County",
+        "pop_flows":19
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Alameda County",
+        "pop_flows":18
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Tuolumne County",
+        "pop_flows":17
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Riverside County",
+        "pop_flows":16
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Sutter County",
+        "pop_flows":16
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Lassen County",
+        "pop_flows":15
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Marin County",
+        "pop_flows":15
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Inyo County",
+        "pop_flows":15
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Tulare County",
+        "pop_flows":15
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Sierra County",
+        "pop_flows":14
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Ventura County",
+        "pop_flows":14
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Mono County",
+        "pop_flows":14
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Ventura County",
+        "pop_flows":13
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Lassen County",
+        "pop_flows":13
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Mariposa County",
+        "pop_flows":13
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Calaveras County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Monterey County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"San Benito County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Tulare County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Monterey County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Mariposa County",
+        "pop_flows":12
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Orange County",
+        "pop_flows":11
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Imperial County",
+        "pop_flows":11
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Inyo County",
+        "pop_flows":11
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Lassen County",
+        "pop_flows":10
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Mariposa County",
+        "pop_flows":10
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Ventura County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Trinity County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Calaveras County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Kings County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Del Norte County",
+        "pop_flows":9
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Modoc County",
+        "pop_flows":8
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Madera County",
+        "pop_flows":8
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"San Benito County",
+        "pop_flows":8
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Amador County",
+        "pop_flows":7
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Santa Cruz County",
+        "pop_flows":7
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"San Luis Obispo County",
+        "pop_flows":7
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Madera County",
+        "pop_flows":6
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Mariposa County",
+        "pop_flows":6
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Nevada County",
+        "pop_flows":6
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Amador County",
+        "pop_flows":6
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Amador County",
+        "pop_flows":5
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Mono County",
+        "pop_flows":5
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Lake County",
+        "pop_flows":5
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Ventura County",
+        "pop_flows":5
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Tuolumne County",
+        "pop_flows":4
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Mariposa County",
+        "pop_flows":4
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Sierra County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Amador County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Mono County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Modoc County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Mariposa County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Mariposa County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Plumas County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Calaveras County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Calaveras County",
+        "pop_flows":3
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Imperial County",
+        "pop_flows":2
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Alpine County",
+        "pop_flows":2
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Imperial County",
+        "pop_flows":2
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":2
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Inyo County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Inyo County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"Calaveras County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Tehama County",
+        "county_d":"Alpine County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Tuolumne County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Mendocino County",
+        "county_d":"Sierra County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Mono County",
+        "pop_flows":1
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Kings County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Imperial County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Glenn County",
+        "county_d":"San Benito County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Alpine County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Santa Barbara County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"Inyo County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Alpine County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Lake County",
+        "county_d":"Sierra County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Humboldt County",
+        "county_d":"Sierra County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Colusa County",
+        "county_d":"San Benito County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Inyo County",
+        "pop_flows":0
+    },
+    {
+        "county_o":"Trinity County",
+        "county_d":"Sierra County",
+        "pop_flows":0
+    }
+]
+            
+
+            // Function to populate the table with data
+            function populateTable() {
+                const tableBody = document.getElementById('tablebody');
+
+                data.forEach(row => {
+                    const newRow = document.createElement('tr');
+
+                    const reporterCell = document.createElement('td');
+                    reporterCell.textContent = row.county_o;
+                    newRow.appendChild(reporterCell);
+
+                    const partnerCell = document.createElement('td');
+                    partnerCell.textContent = row.county_d;
+                    newRow.appendChild(partnerCell);
+
+                    const valueCell = document.createElement('td');
+                    valueCell.textContent = row.pop_flows;
+                    newRow.appendChild(valueCell);
+
+                    tableBody.appendChild(newRow);
+                });
+            }
+
+            // Call the populateTable function on page load
+            window.addEventListener('DOMContentLoaded', populateTable);
+        </script>
+    </body>
+</html>
