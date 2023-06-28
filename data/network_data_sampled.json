@@ -4,472 +4,711 @@
         {
             "id": 0,
             "binary": "Los Angeles County",
-            "value": 0.7209916383731492
+            "value": 0.3980144835613161
         },
         {
             "id": 1,
             "binary": "San Bernardino County",
-            "value": 0.611001296910286
+            "value": 0.5091677474252384
         },
         {
             "id": 2,
             "binary": "Contra Costa County",
-            "value": 0.6165684944400186
+            "value": 0.30652767421237137
         },
         {
             "id": 4,
             "binary": "Sacramento County",
-            "value": 0.6997787020858645
+            "value": 0.31858602704462363
         },
         {
             "id": 5,
             "binary": "Alameda County",
-            "value": 0.6048806236241692
+            "value": 0.34314220731357276
         },
         {
             "id": 6,
             "binary": "Santa Clara County",
-            "value": 0.608302481155999
+            "value": 0.30154532381496485
         },
         {
             "id": 7,
             "binary": "Placer County",
-            "value": 0.6092810229306018
+            "value": 0.3165718293814662
+        },
+        {
+            "id": 8,
+            "binary": "San Mateo County",
+            "value": 0.34571670532972565
         },
         {
             "id": 9,
             "binary": "Kern County",
-            "value": 0.6297437646923267
+            "value": 0.3198089046321336
         },
         {
             "id": 11,
             "binary": "San Joaquin County",
-            "value": 0.6358742645467044
+            "value": 0.32579853279678217
+        },
+        {
+            "id": 13,
+            "binary": "El Dorado County",
+            "value": 0.3298465422756693
         },
         {
             "id": 14,
             "binary": "Yolo County",
-            "value": 0.6052246795418703
+            "value": 0.30361228461268747
+        },
+        {
+            "id": 15,
+            "binary": "Merced County",
+            "value": 0.3191243903079072
         },
         {
             "id": 18,
             "binary": "Solano County",
-            "value": 0.7210258864500971
+            "value": 0.42118021696686336
         },
         {
             "id": 19,
             "binary": "Fresno County",
-            "value": 0.6208392345217814
+            "value": 0.32422125103283034
         },
         {
             "id": 22,
             "binary": "Yuba County",
-            "value": 0.6521010329173264
+            "value": 0.3163731208919995
         },
         {
             "id": 23,
             "binary": "Sonoma County",
-            "value": 0.6167979046377365
+            "value": 0.37455557781896753
         },
         {
             "id": 27,
             "binary": "Napa County",
-            "value": 0.6361353585295987
+            "value": 0.3005063554501929
         },
         {
             "id": 29,
             "binary": "Tehama County",
-            "value": 0.093418394335498
+            "value": 0.3128179962228156
         },
         {
             "id": 30,
             "binary": "Sutter County",
-            "value": 0.6004416229127659
+            "value": 0.3167091891608791
         },
         {
             "id": 31,
             "binary": "Marin County",
-            "value": 0.6042549055524611
+            "value": 0.3189327827743098
         },
         {
             "id": 32,
             "binary": "Glenn County",
-            "value": 0.6373136058100904
+            "value": 0.3065524479126426
         },
         {
             "id": 33,
             "binary": "Shasta County",
-            "value": 0.6717048470399646
+            "value": 0.32277307281805506
         },
         {
             "id": 35,
             "binary": "Butte County",
-            "value": 0.6278289538120843
+            "value": 0.3433009012478689
         },
         {
             "id": 37,
             "binary": "Mendocino County",
-            "value": 0.7595831817708589
+            "value": 0.3046564828562796
         },
         {
             "id": 38,
             "binary": "Lake County",
-            "value": 0.6058754222245715
+            "value": 0.318682574082189
         },
         {
             "id": 40,
             "binary": "Colusa County",
-            "value": 0.7547446839750015
+            "value": 0.30343847284906594
         },
         {
             "id": 42,
             "binary": "Siskiyou County",
-            "value": 0.632127184577395
+            "value": 0.32258183888564945
         },
         {
             "id": 43,
             "binary": "Lassen County",
-            "value": 0.6204524798309767
+            "value": 0.30554873919767195
         },
         {
             "id": 46,
             "binary": "Trinity County",
-            "value": 0.610557263593355
+            "value": 0.3396080233931315
         },
         {
             "id": 47,
             "binary": "Humboldt County",
-            "value": 0.7235566900252816
+            "value": 0.30344467175937834
+        },
+        {
+            "id": 48,
+            "binary": "Plumas County",
+            "value": 0.31258574175672127
         },
         {
             "id": 49,
             "binary": "Del Norte County",
-            "value": 0.6148412216274604
+            "value": 0.32573811363423805
+        },
+        {
+            "id": 53,
+            "binary": "Orange County",
+            "value": null
+        },
+        {
+            "id": 54,
+            "binary": "Riverside County",
+            "value": null
+        },
+        {
+            "id": 55,
+            "binary": "San Diego County",
+            "value": null
         }
     ],
     "links": [
         {
-            "source": 15,
-            "target": 19
-        },
-        {
             "source": 18,
-            "target": 20
-        },
-        {
-            "source": 15,
-            "target": 20
-        },
-        {
-            "source": 21,
-            "target": 13
-        },
-        {
-            "source": 22,
-            "target": 13
-        },
-        {
-            "source": 22,
-            "target": 21
-        },
-        {
-            "source": 23,
-            "target": 16
-        },
-        {
-            "source": 23,
-            "target": 9
-        },
-        {
-            "source": 21,
             "target": 22
         },
         {
-            "source": 15,
-            "target": 18
-        },
-        {
-            "source": 18,
-            "target": 15
-        },
-        {
-            "source": 26,
-            "target": 19
-        },
-        {
-            "source": 22,
-            "target": 14
-        },
-        {
-            "source": 27,
-            "target": 26
-        },
-        {
-            "source": 27,
-            "target": 3
-        },
-        {
-            "source": 27,
-            "target": 19
-        },
-        {
-            "source": 15,
-            "target": 3
-        },
-        {
-            "source": 27,
-            "target": 21
-        },
-        {
             "source": 21,
-            "target": 27
-        },
-        {
-            "source": 23,
-            "target": 18
-        },
-        {
-            "source": 23,
-            "target": 3
-        },
-        {
-            "source": 26,
-            "target": 27
-        },
-        {
-            "source": 27,
-            "target": 28
-        },
-        {
-            "source": 22,
-            "target": 3
-        },
-        {
-            "source": 18,
-            "target": 19
+            "target": 23
         },
         {
             "source": 18,
             "target": 23
         },
         {
-            "source": 23,
-            "target": 20
-        },
-        {
-            "source": 21,
-            "target": 3
-        },
-        {
-            "source": 15,
-            "target": 27
-        },
-        {
-            "source": 18,
-            "target": 3
-        },
-        {
-            "source": 27,
-            "target": 13
-        },
-        {
-            "source": 21,
-            "target": 4
-        },
-        {
-            "source": 23,
-            "target": 10
-        },
-        {
-            "source": 27,
-            "target": 0
-        },
-        {
-            "source": 15,
-            "target": 24
-        },
-        {
-            "source": 22,
-            "target": 10
-        },
-        {
-            "source": 22,
-            "target": 4
-        },
-        {
-            "source": 21,
-            "target": 0
-        },
-        {
-            "source": 21,
-            "target": 19
-        },
-        {
-            "source": 26,
-            "target": 3
-        },
-        {
-            "source": 18,
-            "target": 24
-        },
-        {
-            "source": 23,
-            "target": 12
-        },
-        {
-            "source": 15,
-            "target": 9
-        },
-        {
-            "source": 15,
+            "source": 24,
             "target": 16
         },
         {
-            "source": 22,
-            "target": 2
-        },
-        {
-            "source": 22,
-            "target": 9
-        },
-        {
-            "source": 22,
-            "target": 23
-        },
-        {
-            "source": 22,
-            "target": 6
-        },
-        {
-            "source": 18,
+            "source": 25,
             "target": 16
         },
         {
-            "source": 22,
-            "target": 17
-        },
-        {
-            "source": 18,
-            "target": 9
-        },
-        {
-            "source": 15,
-            "target": 23
-        },
-        {
-            "source": 15,
-            "target": 6
-        },
-        {
-            "source": 22,
-            "target": 5
-        },
-        {
-            "source": 22,
-            "target": 27
-        },
-        {
-            "source": 15,
-            "target": 21
-        },
-        {
-            "source": 22,
-            "target": 20
-        },
-        {
-            "source": 15,
-            "target": 25
-        },
-        {
-            "source": 22,
-            "target": 19
-        },
-        {
-            "source": 15,
-            "target": 26
-        },
-        {
-            "source": 15,
-            "target": 8
-        },
-        {
-            "source": 23,
-            "target": 6
-        },
-        {
-            "source": 18,
-            "target": 6
-        },
-        {
-            "source": 23,
-            "target": 15
-        },
-        {
-            "source": 23,
-            "target": 21
-        },
-        {
-            "source": 23,
-            "target": 22
-        },
-        {
-            "source": 18,
-            "target": 21
+            "source": 25,
+            "target": 24
         },
         {
             "source": 26,
-            "target": 15
-        },
-        {
-            "source": 23,
-            "target": 13
-        },
-        {
-            "source": 23,
-            "target": 14
-        },
-        {
-            "source": 18,
-            "target": 12
-        },
-        {
-            "source": 26,
-            "target": 20
-        },
-        {
-            "source": 23,
-            "target": 8
-        },
-        {
-            "source": 18,
-            "target": 0
-        },
-        {
-            "source": 23,
             "target": 19
-        },
-        {
-            "source": 23,
-            "target": 4
         },
         {
             "source": 26,
             "target": 11
         },
         {
-            "source": 26,
-            "target": 1
+            "source": 24,
+            "target": 25
+        },
+        {
+            "source": 18,
+            "target": 21
+        },
+        {
+            "source": 21,
+            "target": 18
+        },
+        {
+            "source": 29,
+            "target": 22
+        },
+        {
+            "source": 25,
+            "target": 17
+        },
+        {
+            "source": 30,
+            "target": 29
+        },
+        {
+            "source": 30,
+            "target": 3
+        },
+        {
+            "source": 30,
+            "target": 22
+        },
+        {
+            "source": 18,
+            "target": 3
+        },
+        {
+            "source": 30,
+            "target": 24
+        },
+        {
+            "source": 24,
+            "target": 30
         },
         {
             "source": 26,
+            "target": 21
+        },
+        {
+            "source": 26,
+            "target": 3
+        },
+        {
+            "source": 29,
+            "target": 30
+        },
+        {
+            "source": 30,
+            "target": 32
+        },
+        {
+            "source": 25,
+            "target": 3
+        },
+        {
+            "source": 21,
+            "target": 22
+        },
+        {
+            "source": 21,
+            "target": 26
+        },
+        {
+            "source": 26,
+            "target": 23
+        },
+        {
+            "source": 24,
+            "target": 3
+        },
+        {
+            "source": 18,
+            "target": 30
+        },
+        {
+            "source": 21,
+            "target": 3
+        },
+        {
+            "source": 30,
+            "target": 16
+        },
+        {
+            "source": 24,
+            "target": 4
+        },
+        {
+            "source": 26,
+            "target": 13
+        },
+        {
+            "source": 30,
             "target": 0
+        },
+        {
+            "source": 18,
+            "target": 27
+        },
+        {
+            "source": 25,
+            "target": 13
+        },
+        {
+            "source": 25,
+            "target": 4
+        },
+        {
+            "source": 30,
+            "target": 23
+        },
+        {
+            "source": 24,
+            "target": 0
+        },
+        {
+            "source": 24,
+            "target": 22
+        },
+        {
+            "source": 30,
+            "target": 6
+        },
+        {
+            "source": 30,
+            "target": 4
+        },
+        {
+            "source": 29,
+            "target": 3
+        },
+        {
+            "source": 30,
+            "target": 34
+        },
+        {
+            "source": 21,
+            "target": 27
+        },
+        {
+            "source": 26,
+            "target": 15
+        },
+        {
+            "source": 18,
+            "target": 11
+        },
+        {
+            "source": 18,
+            "target": 19
+        },
+        {
+            "source": 25,
+            "target": 2
+        },
+        {
+            "source": 30,
+            "target": 2
+        },
+        {
+            "source": 25,
+            "target": 11
+        },
+        {
+            "source": 25,
+            "target": 26
+        },
+        {
+            "source": 30,
+            "target": 18
+        },
+        {
+            "source": 25,
+            "target": 6
+        },
+        {
+            "source": 21,
+            "target": 19
+        },
+        {
+            "source": 24,
+            "target": 2
+        },
+        {
+            "source": 25,
+            "target": 20
+        },
+        {
+            "source": 30,
+            "target": 35
+        },
+        {
+            "source": 24,
+            "target": 11
+        },
+        {
+            "source": 24,
+            "target": 35
+        },
+        {
+            "source": 24,
+            "target": 23
+        },
+        {
+            "source": 21,
+            "target": 11
+        },
+        {
+            "source": 18,
+            "target": 26
+        },
+        {
+            "source": 24,
+            "target": 5
+        },
+        {
+            "source": 24,
+            "target": 20
+        },
+        {
+            "source": 24,
+            "target": 7
+        },
+        {
+            "source": 18,
+            "target": 6
+        },
+        {
+            "source": 25,
+            "target": 5
+        },
+        {
+            "source": 25,
+            "target": 30
+        },
+        {
+            "source": 18,
+            "target": 24
+        },
+        {
+            "source": 24,
+            "target": 34
+        },
+        {
+            "source": 24,
+            "target": 6
+        },
+        {
+            "source": 24,
+            "target": 13
+        },
+        {
+            "source": 25,
+            "target": 23
+        },
+        {
+            "source": 18,
+            "target": 28
+        },
+        {
+            "source": 25,
+            "target": 22
+        },
+        {
+            "source": 18,
+            "target": 29
+        },
+        {
+            "source": 18,
+            "target": 9
+        },
+        {
+            "source": 26,
+            "target": 6
+        },
+        {
+            "source": 18,
+            "target": 5
+        },
+        {
+            "source": 24,
+            "target": 17
+        },
+        {
+            "source": 18,
+            "target": 13
+        },
+        {
+            "source": 24,
+            "target": 19
+        },
+        {
+            "source": 18,
+            "target": 4
+        },
+        {
+            "source": 24,
+            "target": 26
+        },
+        {
+            "source": 18,
+            "target": 31
+        },
+        {
+            "source": 25,
+            "target": 10
+        },
+        {
+            "source": 25,
+            "target": 19
+        },
+        {
+            "source": 21,
+            "target": 6
+        },
+        {
+            "source": 25,
+            "target": 7
+        },
+        {
+            "source": 18,
+            "target": 32
+        },
+        {
+            "source": 26,
+            "target": 18
+        },
+        {
+            "source": 25,
+            "target": 33
         },
         {
             "source": 26,
             "target": 24
         },
         {
+            "source": 25,
+            "target": 0
+        },
+        {
             "source": 26,
+            "target": 25
+        },
+        {
+            "source": 21,
+            "target": 24
+        },
+        {
+            "source": 18,
+            "target": 0
+        },
+        {
+            "source": 18,
+            "target": 2
+        },
+        {
+            "source": 29,
+            "target": 18
+        },
+        {
+            "source": 26,
+            "target": 16
+        },
+        {
+            "source": 26,
+            "target": 17
+        },
+        {
+            "source": 21,
+            "target": 15
+        },
+        {
+            "source": 29,
+            "target": 23
+        },
+        {
+            "source": 26,
+            "target": 9
+        },
+        {
+            "source": 21,
+            "target": 0
+        },
+        {
+            "source": 26,
+            "target": 22
+        },
+        {
+            "source": 26,
+            "target": 4
+        },
+        {
+            "source": 29,
+            "target": 14
+        },
+        {
+            "source": 21,
+            "target": 16
+        },
+        {
+            "source": 21,
+            "target": 9
+        },
+        {
+            "source": 21,
+            "target": 4
+        },
+        {
+            "source": 21,
+            "target": 13
+        },
+        {
+            "source": 21,
+            "target": 31
+        },
+        {
+            "source": 21,
+            "target": 12
+        },
+        {
+            "source": 21,
+            "target": 30
+        },
+        {
+            "source": 26,
+            "target": 2
+        },
+        {
+            "source": 29,
+            "target": 1
+        },
+        {
+            "source": 26,
+            "target": 5
+        },
+        {
+            "source": 29,
+            "target": 0
+        },
+        {
+            "source": 29,
+            "target": 27
+        },
+        {
+            "source": 21,
+            "target": 2
+        },
+        {
+            "source": 29,
+            "target": 8
+        },
+        {
+            "source": 29,
+            "target": 32
+        },
+        {
+            "source": 29,
+            "target": 12
+        },
+        {
+            "source": 26,
+            "target": 31
+        },
+        {
+            "source": 29,
+            "target": 9
+        },
+        {
+            "source": 29,
+            "target": 13
+        },
+        {
+            "source": 29,
+            "target": 2
+        },
+        {
+            "source": 29,
+            "target": 26
+        },
+        {
+            "source": 29,
+            "target": 11
+        },
+        {
+            "source": 29,
             "target": 7
         }
     ],

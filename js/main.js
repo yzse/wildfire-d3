@@ -3,12 +3,9 @@ requirejs([
     'jquery',
     'd3',
     'js/models/network',
-    'js/models/trajectory',
     'js/views/network',
     'js/views/modal',
-    'js/views/trajectory',
-    'js/views/trajectory-table'
-], function($, d3, NetworkModel, TrajectoryModel, NetworkView, NetworkModal, TrajectoryView, TrajectoryTable) {
+], function($, d3, NetworkModel, NetworkView, NetworkModal) {
 
     // Data plotted in network
     var data1 = {
